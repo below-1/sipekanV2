@@ -1,0 +1,146 @@
+{% extends 'app/app-base.html' %}
+
+{% block customHeader %}
+  <style>
+    #form-container {
+      -webkit-column-count: 4;
+      -webkit-column-gap:   0px;
+      -moz-column-count:    5;
+      -moz-column-gap:      0px;
+      column-count:         4;
+      column-gap:           0px;  
+    }
+
+    #form-container > .column-form-field {
+      /*display: inline;*/
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    @media (max-width: 1200px) {
+      #form-container {
+      -moz-column-count:    4;
+      -webkit-column-count: 4;
+      column-count:         4;
+      }
+    }
+    @media (max-width: 1000px) {
+      #form-container {
+      -moz-column-count:    3;
+      -webkit-column-count: 3;
+      column-count:         3;
+      }
+    }
+    @media (max-width: 800px) {
+      #form-container {
+      -moz-column-count:    2;
+      -webkit-column-count: 2;
+      column-count:         2;
+      }
+    }
+    @media (max-width: 400px) {
+      #form-container {
+      -moz-column-count:    1;
+      -webkit-column-count: 1;
+      column-count:         1;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block pageActions %}
+<div class="btn-list">
+    <button  class="btn btn-primary d-none d-sm-inline-block">
+      <!-- Download SVG icon from http://tabler-icons.io/i/cloud-upload -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" /><polyline points="9 15 12 12 15 15" /><line x1="12" y1="12" x2="12" y2="21" /></svg>
+      Simpan Data
+    </button>
+    <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new report">
+      <!-- Download SVG icon from http://tabler-icons.io/i/cloud-upload -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" /><polyline points="9 15 12 12 15 15" /><line x1="12" y1="12" x2="12" y2="21" /></svg>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <h1>
+              Hasil Klasifikasi Sistem: 
+              {% if class_result == 1 %}
+                Lulus
+              {% elif class_result == 0 %}
+                Tidak Lulus
+              {% endif %}
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-12 col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title text-capitalize">
+              informasi kendaraan
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label>Nomor Kendaraan</label>
+              <input 
+                value="{{item.nomor_kendaraan}}" 
+                readonly
+                type="text" name="nomor_kendaraan" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label>Nama Pemilik</label>
+              <input 
+                value="{{item.nama_pemilik}}" 
+                readonly
+                type="text" name="nama_pemilik" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label>Tanggal Pemeriksaan</label>
+              <input 
+                readonly
+                value="{{item.tanggal_pemeriksaan|date:'Y-m-d'}}" 
+                type="date" name="tanggal_pemeriksaan" class="form-control" required />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card">
+          <div 
+            class="card-img-top img-responsive" 
+            style="background-image: url({{ item.kendaraan_image.url }})">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Foto Kendaraaan</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card">
+          <div 
+            class="card-img-top img-responsive" 
+            style="background-image: url({{ item.bukti_image.url }})">
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">Foto Form Pengujian</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-grip col-12 col-md-3 my-3">
+      <button type="submit" class="btn btn-primary w-100">
+        update hasil pemeriksaan
+      </button>
+    </div>
+  </form>
+{% endblock %}

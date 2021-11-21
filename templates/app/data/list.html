@@ -1,0 +1,97 @@
+{% extends 'app/app-base.html' %}
+{% load static %}
+
+{% block pageActions %}
+<div class="btn-list">
+    <a href="/app/data/tambah" class="btn btn-primary d-none d-sm-inline-block">
+      <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+      Tambah Data
+    </a>
+    <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new report">
+      <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-vcenter card-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Nomor Kendaraan</th>
+                <th>Nama Pemilik</th>
+                <th>Status</th>
+                <th>Tanggal Pemeriksaan</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+                <tr>
+                  <td>
+                    <div class="d-flex py-1 align-items-center">
+                      <span class="avatar me-2" 
+                        style="background-image: url({{ item.kendaraan_image.url }})">
+                      </span>
+                      <div class="flex-fill">
+                        <div class="font-weight-medium">Lorry Mion</div>
+                        <div class="text-muted"><a href="#" class="text-reset">lmiona@livejournal.com</a></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div>{{ item.nomor_kendaraan }}</div>
+                  </td>
+                  <td>
+                    <div>{{ item.nama_pemilik }}</div>
+                  </td>
+                  <td>
+                    <div style="display: flex; align-items: center;">
+                      {% if item.status == 'DR' %}
+                        <span class="badge bg-yellow me-2 p-2"></span>
+                        <span>Draft</span>
+                      {% elif item.status == 'LU' %}
+                        <span class="badge bg-green me-2 p-2"></span>
+                        <span>Lulus</span>
+                      {% elif item.status == 'TL' %}
+                        <span class="badge bg-red me-2 p-2"></span>
+                        <span>Tidak Lulus</span>
+                      {% endif %}
+                    </div>
+                  </td>
+                  <td>
+                    <div>{{ item.tanggal_pemeriksaan }}</div>
+                  </td>
+                  <td class="text-end">
+                    <span class="dropdown">
+                      <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Aksi</button>
+                      <div class="dropdown-menu dropdown-menu-end" style="">
+                        {% if item.status == 'DR' %}
+                          <a class="dropdown-item" href="/app/data/{{item.id}}/classify">
+                            Klasifikasi
+                          </a>
+                        {% endif %}
+                        <a class="dropdown-item" href="/app/data/{{item.id}}/edit">
+                          Edit
+                        </a>
+                        <a class="dropdown-item" href="/app/data/{{item.id}}/remove">
+                          Hapus
+                        </a>
+                      </div>
+                    </span>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

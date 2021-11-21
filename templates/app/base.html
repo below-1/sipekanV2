@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta4
+* @link https://tabler.io
+* Copyright 2018-2021 The Tabler Authors
+* Copyright 2018-2021 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en">
+  <head>
+    {% include 'app/inc/head.html' %}
+  </head>
+  <body class="antialiased">
+    <div class="wrapper">
+      {% include 'app/inc/header.html' %}
+      {% include 'app/inc/navigation.html' %}
+      <div class="page-wrapper">
+        {% include 'app/inc/page-header.html' %}
+        <div class="page-body">
+          <div class="container-xl">
+            {% block content %}
+            {% endblock %}
+          </div>
+        </div>
+        {% include 'app/inc/footer.html' %}
+      </div>
+    </div>
+    {% include 'app/inc/js.html' %}
+  </body>
+</html>
