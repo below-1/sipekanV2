@@ -13,7 +13,7 @@ def index(request):
 def list_data_uji_kendaraan(request):
     all_data = DataUjiKendaraan.objects.all()
     context = {
-        'title': 'daftar data uji kendaraan',
+        'title': 'data uji kendaraan',
         'items': all_data
     }
     return render(request, 'app/data/list.html', context)
