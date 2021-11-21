@@ -8,5 +8,6 @@ urlpatterns = [
     path('data/tambah', views.add_data, name='add_data'),
     path('data/<int:id>/remove', views.remove_data, name='remove_data'),
     path('data/<int:id>/edit', views.edit_data, name='edit_data'),
-    path('data/<int:id>/classify', views.classify_data, name='classify_data')
+    path('data/<int:id>/classify', views.classify_data, name='classify_data'),
+    path('statistik', views.statistik, name='statistik')
 ]

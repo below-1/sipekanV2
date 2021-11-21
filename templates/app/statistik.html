@@ -1,0 +1,70 @@
+{% extends 'app/app-base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div id="chart-demo-pie" class="chart-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Libs JS -->
+<script src="{% static 'dist/libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+
+{# Aggregate data #}
+{{ aggregate|json_script:"aggregate-data" }}
+
+<script>
+  const aggregate = JSON.parse(document.getElementById('aggregate-data').textContent);
+  const series = aggregate.map(agg => agg.total);
+  const labels = aggregate.map(agg => agg.label);
+  const colors = aggregate.map(agg => agg.color);
+  document.addEventListener("DOMContentLoaded", function () {
+    window.ApexCharts && (new ApexCharts(document.getElementById('chart-demo-pie'), {
+      chart: {
+        type: "donut",
+        fontFamily: 'inherit',
+        height: 500,
+        sparkline: {
+          enabled: true
+        },
+        animations: {
+          enabled: false
+        },
+      },
+      fill: {
+        opacity: 1,
+      },
+      series,
+      labels,
+      grid: {
+        strokeDashArray: 4,
+      },
+      colors,
+      legend: {
+        show: true,
+        position: 'bottom',
+        offsetY: 12,
+        markers: {
+          width: 10,
+          height: 10,
+          radius: 100,
+        },
+        itemMargin: {
+          horizontal: 8,
+          vertical: 8
+        },
+      },
+      tooltip: {
+        fillSeriesColor: false
+      },
+    })).render();
+  });
+</script>
+{% endblock %}

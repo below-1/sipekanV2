@@ -1,14 +1,17 @@
 from django.http import HttpResponse
+from django.db.models import Count
 from django.shortcuts import render, redirect
-from .models import DataUjiKendaraan
-from .meta_form import meta_form__data_uji_kendaraan, status_form_options
+from .models import DataUjiKendaraan, StatusPengujian
+from .meta_form import meta_form__data_uji_kendaraan, status_form_options, meta_form__component_keys
 from . import utils
 from datetime import date, datetime
 from . import compute
 
 # Create your views here.
 def index(request):
-    return render(request, 'app/base.html')
+    return render(request, 'app/index.html', {
+        'title': 'Home'
+    })
 
 def list_data_uji_kendaraan(request):
     all_data = DataUjiKendaraan.objects.all()
@@ -70,28 +73,43 @@ def add_data(request):
         return render(request, 'app/data/add.html', context)
 
 def edit_data(request, id):
+    item = DataUjiKendaraan.objects.get(id=id)
     if request.POST:
-        if request.POST['action'] == 'classify':
-            item = DataUjiKendaraan.objects.get(id=id)
-            data = request.POST.dict()
-            exclude_keys = {
-                'action',
-                'nomor_kendaraan', 
-                'nama_pemilik', 
-                'tanggal_pemeriksaan', 
-                'csrfmiddlewaretoken',
-                'kendaraan_image', 
-                'bukti_image'}
-            components_arr = []
-            for group in meta_form__data_uji_kendaraan:
-                for comp in group.components:
-                    if comp.separator:
-                        continue
-                    components_arr.append(1 if getattr(item, comp.name) else 0)
-            class_result = compute.random_forest(components_arr)
-        return HttpResponse('OK')
+        exclude_keys = {
+            'nomor_kendaraan',
+            'nama_pemilik',
+            'tanggal_pemeriksaan',
+            'status',
+            'bukti_name',
+            'kendaraan_image',
+            'csrfmiddlewaretoken'
+        }
+        data = request.POST.dict()
+        item.nomor_kendaraan = data['nomor_kendaraan']
+        item.nama_pemilik = data['nama_pemilik']
+
+        k = 'tanggal_pemeriksaan'
+        tgl = data[k]
+        item.tanggal_pemeriksaan = datetime.strptime(tgl, '%Y-%m-%d').date()
+        item.status = StatusPengujian(data['status'])
+
+        file_keys = ['bukti_image', 'kendaraan_image']
+        files = request.FILES
+        new_random_name = utils.random_name()
+        for i, fk in enumerate(file_keys):
+            if fk not in files:
+                continue
+            updated_name = utils.file_random_name(files.get(fk), new_random_name, f'0{i + 1}')
+            file = getattr(item, fk)
+            file.save(updated_name, files[fk])
+
+        for k in meta_form__component_keys:
+            value =  not (k in data)
+            setattr(item, k, value)
+
+        item.save()
+        return redirect('list_data')
     else:
-        item = DataUjiKendaraan.objects.get(id=id)
         forms = []
         for group in meta_form__data_uji_kendaraan:
             components = []
@@ -136,3 +154,22 @@ def classify_data(request, id):
         'class_result': class_result
     }
     return render(request, 'app/data/classification-result.html', context)
+
+def statistik(request):
+    aggregate = [
+        { 'value': 'DR', 'label': 'draft', 'color': '#f59f00' },
+        { 'value': 'TL', 'label': 'tidak lulus', 'color': '#d63939' },
+        { 'value': 'LU', 'label': 'lulus', 'color': '#206bc4' }
+    ]
+    aggregate_result = list( DataUjiKendaraan.objects\
+        .values('status').annotate(total=Count('id')) )
+    aggregate_keys = { row['status'] for row in aggregate_result }
+
+    for item in aggregate:
+        agg_item = next(filter( lambda row: row['status'] == item['value'], aggregate_result ), { 'total': 0 })
+        item['total'] = agg_item['total']
+    context = {
+        'title': "Statistik Data Kendaraan",
+        'aggregate': aggregate
+    }
+    return render(request, 'app/statistik.html', context)

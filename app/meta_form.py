@@ -187,6 +187,13 @@ meta_form__data_uji_kendaraan = [
     ])
 ]
 
+meta_form__component_keys = []
+for group in meta_form__data_uji_kendaraan:
+    for field in group.components:
+        if field.separator:
+            continue
+        meta_form__component_keys.append(field.name)
+
 status_form_options = [
     { 'value': 'DR', 'label': 'draft' },
     { 'value': 'LU', 'label': 'lulus' },
