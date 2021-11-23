@@ -20,7 +20,8 @@ class DataUjiKendaraan(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     bukti_image = models.ImageField(upload_to='static/uploads/', null=True)
-    kendaraan_image = models.ImageField(upload_to='static/uploads/', null=True)
+    kendaraan_image = models.ImageField(upload_to='static/uploads/', null=True, default='truck_default.jpg')
+    user_token = models.CharField(max_length=200, null=True, unique=True)
 
     # Peralatan
     no_chasis = models.BooleanField(default=True)
@@ -175,6 +176,7 @@ class DataUjiKendaraan(models.Model):
     rp_sambungan_tuas_kabel_r = models.BooleanField(default=True)
 
     srgb_fungsi = models.BooleanField(default=True)
+    srgb_efisiensi_rem = models.BooleanField(default=True)
     er_rem_utama = models.BooleanField(default=True)
     er_perbedaan_depan = models.BooleanField(default=True)
     er_perbedaan_belakang = models.BooleanField(default=True)

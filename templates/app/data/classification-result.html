@@ -98,6 +98,13 @@
                 type="text" name="nomor_kendaraan" class="form-control" required />
             </div>
             <div class="mb-3">
+              <label>Token</label>
+              <input 
+                value="{{item.user_token}}" 
+                readonly
+                type="text" name="user_token" class="form-control" />
+            </div>
+            <div class="mb-3">
               <label>Nama Pemilik</label>
               <input 
                 value="{{item.nama_pemilik}}" 
@@ -116,9 +123,15 @@
       </div>
       <div class="col-12 col-md-4">
         <div class="card">
+
           <div 
             class="card-img-top img-responsive" 
-            style="background-image: url({{ item.kendaraan_image.url }})">
+            {% if item.kendaraan_image %}
+              style="background-image: url({{ item.kendaraan_image.url }})"
+            {% else %}
+              style="background-image: url(/static/static/photos/default_truck.jpg)"
+            {% endif %}
+          >
           </div>
           <div class="card-body">
             <h3 class="card-title">Foto Kendaraaan</h3>
@@ -129,7 +142,12 @@
         <div class="card">
           <div 
             class="card-img-top img-responsive" 
-            style="background-image: url({{ item.bukti_image.url }})">
+            {% if item.bukti_image %}
+              style="background-image: url({{ item.bukti_image.url }})"
+            {% else %}
+              style="background-image: url(/static/static/photos/default_truck.jpg)"
+            {% endif %}
+          >
           </div>
           <div class="card-body">
             <h3 class="card-title">Foto Form Pengujian</h3>

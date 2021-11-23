@@ -15,9 +15,12 @@ def index(request):
 
 def list_data_uji_kendaraan(request):
     all_data = DataUjiKendaraan.objects.all()
+    total_data = DataUjiKendaraan.objects.count()
     context = {
         'title': 'data uji kendaraan',
-        'items': all_data
+        'subtitle': f'total data {total_data}',
+        'items': all_data,
+        'total_data': total_data
     }
     return render(request, 'app/data/list.html', context)
 
@@ -45,6 +48,9 @@ def add_data(request):
 
         # extract selected components
         components = { k: False for k in data.keys() }
+
+        # Add user_token
+        main_data['user_token'] = utils.random_name(n=10)
 
         # merge all data
         main_data.update(components)
@@ -148,7 +154,7 @@ def classify_data(request, id):
             if comp.separator:
                 continue
             components_arr.append(1 if getattr(item, comp.name) else 0)
-    class_result = compute.random_forest(components_arr)
+    class_result = compute.mult_nb(components_arr)
     context = {
         'item': item,
         'class_result': class_result

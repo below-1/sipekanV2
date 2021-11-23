@@ -37,7 +37,7 @@
                   <td>
                     <div class="d-flex py-1 align-items-center">
                       <span class="avatar me-2" 
-                        style="background-image: url({{ item.kendaraan_image.url }})">
+                        style="background-image: url({% if item.kendaraan_image %} {{ item.kendaraan_image.url }} {% else %} '/static/car.jpg' {% endif %})">
                       </span>
                     </div>
                   </td>
@@ -68,10 +68,10 @@
                     <span class="dropdown">
                       <button class="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown" aria-expanded="false">Aksi</button>
                       <div class="dropdown-menu dropdown-menu-end" style="">
+                        <a class="dropdown-item" href="/app/data/{{item.id}}/classify">
+                          Klasifikasi
+                        </a>
                         {% if item.status == 'DR' %}
-                          <a class="dropdown-item" href="/app/data/{{item.id}}/classify">
-                            Klasifikasi
-                          </a>
                         {% endif %}
                         <a class="dropdown-item" href="/app/data/{{item.id}}/edit">
                           Edit

@@ -13,7 +13,7 @@ meta_form__data_uji_kendaraan = [
         FormField('no_chasis', 'nomor chasis'),
         FormField('pelat_pabrik_pembuat', 'pelat pabrik pembuat'),
         FormField('pelat_nomor', 'pelat nomor'),
-        FormField('tulisan', 'pelat nomor'),
+        FormField('tulisan', 'tulisan'),
 
         FormField('penghapus_kaca_depan_l', 'penghapus kaca depan L'),
         FormField('penghapus_kaca_depan_r', 'penghapus kaca depan R'),
@@ -167,7 +167,7 @@ meta_form__data_uji_kendaraan = [
 
         FormField('', 'sistem rem gas buang', separator=True),
         FormField('srgb_fungsi', 'fungsi'),
-        FormField('', 'efisiensi rem', separator=True),
+        FormField('srgb_efisiensi_rem', 'efisiensi rem'),
         FormField('er_rem_utama', 'rem utama'),
         FormField('er_perbedaan_depan', 'perbedaan depan'),
         FormField('er_perbedaan_belakang', 'perbedaan belakang'),

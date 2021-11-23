@@ -81,6 +81,13 @@
                 type="text" name="nomor_kendaraan" class="form-control" required />
             </div>
             <div class="mb-3">
+              <label>Token</label>
+              <input 
+                value="{{item.user_token}}" 
+                readonly
+                type="text" name="user_token" class="form-control" />
+            </div>
+            <div class="mb-3">
               <label>Nama Pemilik</label>
               <input 
                 value="{{item.nama_pemilik}}" 

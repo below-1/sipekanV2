@@ -1,5 +1,5 @@
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import MultinomialNB
 import csv
 import numpy as np
 
@@ -9,6 +9,7 @@ with open(filename) as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
         data.append(row)
+data = data[1:]
 
 arr = []
 for i, row in enumerate(data):
@@ -29,10 +30,10 @@ y = data[:, -1]
 #     test_size=0.3,
     # random_state=8)
 
-clf = RandomForestClassifier()
+clf = MultinomialNB()
 clf.fit(X, y)
 
-def random_forest(_xs):
+def mult_nb(_xs):
     nattr = len(_xs)
     xs = np.array(_xs).reshape(( 1, nattr ))
     result, *_ = clf.predict(xs)
