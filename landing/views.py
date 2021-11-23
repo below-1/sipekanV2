@@ -13,7 +13,7 @@ def get_info(request):
     forms = []
     for group in meta_form__data_uji_kendaraan:
         components = []
-        group_item = { 
+        group_item = {
             'name': group.name,
             'title': group.title
         }

@@ -10,7 +10,8 @@ from . import compute
 # Create your views here.
 def index(request):
     return render(request, 'app/index.html', {
-        'title': 'Home'
+        'title': 'Home',
+        'active_tab': 'home'
     })
 
 def list_data_uji_kendaraan(request):
@@ -20,7 +21,8 @@ def list_data_uji_kendaraan(request):
         'title': 'data uji kendaraan',
         'subtitle': f'total data {total_data}',
         'items': all_data,
-        'total_data': total_data
+        'total_data': total_data,
+        'active_tab': 'data'
     }
     return render(request, 'app/data/list.html', context)
 
@@ -74,7 +76,8 @@ def add_data(request):
     else:
         context = {
             'title': 'tambah data uji kendaraan',
-            'forms': meta_form__data_uji_kendaraan
+            'forms': meta_form__data_uji_kendaraan,
+            'active_tab': 'data'
         }
         return render(request, 'app/data/add.html', context)
 
@@ -142,7 +145,8 @@ def edit_data(request, id):
             'title': 'edit data uji kendaraan',
             'forms': forms,
             'item': item,
-            'status_form_options': status_form_options
+            'status_form_options': status_form_options,
+            'active_tab': 'data'
         }
         return render(request, 'app/data/edit.html', context)
 
@@ -157,7 +161,8 @@ def classify_data(request, id):
     class_result = compute.mult_nb(components_arr)
     context = {
         'item': item,
-        'class_result': class_result
+        'class_result': class_result,
+        'active_tab': 'data'
     }
     return render(request, 'app/data/classification-result.html', context)
 
@@ -176,6 +181,7 @@ def statistik(request):
         item['total'] = agg_item['total']
     context = {
         'title': "Statistik Data Kendaraan",
-        'aggregate': aggregate
+        'aggregate': aggregate,
+        'active_tab': 'stat'
     }
     return render(request, 'app/statistik.html', context)
