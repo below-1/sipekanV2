@@ -109,7 +109,7 @@ bayes classifier"</div>
                         <br />
                         Untuk Anda.
                     </h2>
-                    <a class="btn btn-outline-light py-3 px-4 rounded-pill" href="/app/data" target="_blank">Temukan Data Kendaraan Anda</a>
+                    <button class="btn btn-outline-light py-3 px-4 rounded-pill" data-bs-toggle="modal" data-bs-target="#feedbackModal">Temukan Data Kendaraan Anda</button>
                 </div>
             </div>
         </section>
@@ -144,10 +144,10 @@ bayes classifier"</div>
                         <!-- To make this form functional, sign up at-->
                         <!-- https://startbootstrap.com/solution/contact-forms-->
                         <!-- to get an API token!-->
-                        <form id="contactForm" method="POST" enctype="multipart/form-data" action="">
+                        <form id="contactForm" method="GET" action="/info">
                             <!-- Name input-->
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" />
+                                <input name="token" class="form-control" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" />
                                 <label for="name">Token</label>
                                 <div class="invalid-feedback" data-sb-feedback="name:required">Token harus diisi.</div>
                             </div>
@@ -169,7 +169,7 @@ bayes classifier"</div>
                             <!-- an error submitting the form-->
                             <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
                             <!-- Submit Button-->
-                            <div class="d-grid"><button class="btn btn-primary rounded-pill btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
+                            <div class="d-grid"><button class="btn btn-primary rounded-pill btn-lg" id="submitButton" type="submit">Submit</button></div>
                         </form>
                     </div>
                 </div>
