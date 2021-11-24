@@ -2,12 +2,79 @@
 {% load static %}
 
 {% block content %}
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-body">
-        </div>
+<div class="row mb-4">
+  <div class="col-12 col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Parameter Pengujian</div>
+      </div>
+      <div class="card-body">
+        <form method="GET">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label>Sumber Random</label>
+            <input 
+              value="{{ random_state }}"
+              type="number" 
+              name="random_state" 
+              class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label>Ukuran Data Uji</label>
+            <div class="input-group">
+              <input 
+                value="{{ test_size }}"
+                type="number" min="10" max="90" 
+                name="test_size" 
+                class="form-control" required />
+              <span class="input-group-text">
+                %
+              </span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            ulangi pengujian
+          </button>
+        </form>
       </div>
     </div>
   </div>
+  <div class="col-12 col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Hasil Pengujian</div>
+      </div>
+      <div>
+        <table class="table table-v-center card-table">
+          <tbody>
+            <tr>
+              <td>True Positif</td>
+              <td>{{ tp }}</td>
+            </tr>
+            <tr>
+              <td>False Positif</td>
+              <td>{{ fp }}</td>
+            </tr>
+            <tr>
+              <td>True Negative</td>
+              <td>{{ tn }}</td>
+            </tr>
+            <tr>
+              <td>False Negative</td>
+              <td>{{ fn }}</td>
+            </tr>
+            <tr>
+              <td>Akurasi</td>
+              <td>{{ acc|floatformat:2 }} %</td>
+            </tr>
+            <tr>
+              <td>Error Rate</td>
+              <td>{{ err_rate|floatformat:2 }} %</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

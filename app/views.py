@@ -201,6 +201,20 @@ def statistik(request):
 @login_required
 def method_testing(request):
     context = {
-        'active_tab': 'method_testing'
+        'active_tab': 'method_testing',
+        'title': 'Pengujian Metode'
     }
+    random_state = int(request.GET.get('random_state', '8'))
+    test_size = int(request.GET.get('test_size', 30))
+    test_result = compute.test_method(
+        random_state=random_state, 
+        test_size=test_size / 100.0
+    )
+
+    context.update(test_result)
+    context['test_size'] = test_size
+    context['random_state'] = random_state
+    context['acc'] = context['acc'] * 100
+    context['err_rate'] = context['err_rate'] * 100
+
     return render(request, 'app/method-testing.html', context)
