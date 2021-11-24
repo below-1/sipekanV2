@@ -2,7 +2,11 @@ from django.http import HttpResponse
 from django.db.models import Count
 from django.shortcuts import render, redirect
 from .models import DataUjiKendaraan, StatusPengujian
-from .meta_form import meta_form__data_uji_kendaraan, status_form_options, meta_form__component_keys
+from .meta_form import (
+    meta_form__data_uji_kendaraan, 
+    status_form_options, 
+    meta_form__component_keys
+)
 from . import utils
 from datetime import date, datetime
 from . import compute
