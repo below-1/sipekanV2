@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import render, redirect
 from .models import DataUjiKendaraan, StatusPengujian
@@ -12,12 +13,14 @@ from datetime import date, datetime
 from . import compute
 
 # Create your views here.
+@login_required
 def index(request):
     return render(request, 'app/index.html', {
         'title': 'Home',
         'active_tab': 'home'
     })
 
+@login_required
 def list_data_uji_kendaraan(request):
     all_data = DataUjiKendaraan.objects.all()
     total_data = DataUjiKendaraan.objects.count()
@@ -30,11 +33,13 @@ def list_data_uji_kendaraan(request):
     }
     return render(request, 'app/data/list.html', context)
 
+@login_required
 def remove_data(request, id):
     item = DataUjiKendaraan.objects.get(id=id)
     item.delete()
     return redirect('list_data')
 
+@login_required
 def add_data(request):
     if request.POST:
         data = request.POST.dict()
@@ -85,6 +90,7 @@ def add_data(request):
         }
         return render(request, 'app/data/add.html', context)
 
+@login_required
 def edit_data(request, id):
     item = DataUjiKendaraan.objects.get(id=id)
     if request.POST:
@@ -154,6 +160,7 @@ def edit_data(request, id):
         }
         return render(request, 'app/data/edit.html', context)
 
+@login_required
 def classify_data(request, id):
     item = DataUjiKendaraan.objects.get(id=id)
     components_arr = []
@@ -170,6 +177,7 @@ def classify_data(request, id):
     }
     return render(request, 'app/data/classification-result.html', context)
 
+@login_required
 def statistik(request):
     aggregate = [
         { 'value': 'DR', 'label': 'draft', 'color': '#f59f00' },
@@ -189,3 +197,10 @@ def statistik(request):
         'active_tab': 'stat'
     }
     return render(request, 'app/statistik.html', context)
+
+@login_required
+def method_testing(request):
+    context = {
+        'active_tab': 'method_testing'
+    }
+    return render(request, 'app/method-testing.html', context)
