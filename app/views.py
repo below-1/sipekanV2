@@ -2,7 +2,10 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import render, redirect
-from .models import DataUjiKendaraan, StatusPengujian
+from .models import (
+    DataUjiKendaraan, 
+    StatusPengujian
+)
 from .meta_form import (
     meta_form__data_uji_kendaraan, 
     status_form_options, 
@@ -218,3 +221,31 @@ def method_testing(request):
     context['err_rate'] = context['err_rate'] * 100
 
     return render(request, 'app/method-testing.html', context)
+
+@login_required
+def method_testing_rev_1(request):
+    context = {
+        'active_tab': 'method_testing',
+        'title': 'Pengujian Metode'
+    }
+    test_ratio = int(request.GET.get('test_ratio', 30))
+    results = compute.test_method_rev_1(test_ratio=test_ratio)
+
+    context['test_ratio'] = test_ratio
+    # format the results for display
+    _results = []
+    for r in results:
+        new_r = {
+            **r,
+            'acc': r['acc'] * 100,
+            'err_rate': r['acc'] * 100
+        }
+        _results.append(new_r)
+    context['results'] = _results
+
+    # format total test and train for display
+    context['display'] = {
+        'n_test': test_ratio,
+        'n_train': 100 - test_ratio
+    }
+    return render(request, 'app/method-testing-rev-1.html', context)
