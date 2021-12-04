@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect
+# import requests
 from .models import (
     DataUjiKendaraan, 
     StatusPengujian
@@ -25,14 +26,24 @@ def index(request):
 
 @login_required
 def list_data_uji_kendaraan(request):
-    all_data = DataUjiKendaraan.objects.all()
-    total_data = DataUjiKendaraan.objects.count()
+    keyword = request.GET.get('keyword', '')
+    query = Q()
+    if keyword:
+        query = query | Q(nomor_kendaraan__icontains=keyword)
+        query = query | Q(user_token__icontains=keyword)
+        query = query | Q(nama_pemilik__icontains=keyword)
+
+    all_data = DataUjiKendaraan.objects\
+        .filter(query).all()
+    total_data = DataUjiKendaraan.objects.filter(query).count()
+
     context = {
         'title': 'data uji kendaraan',
         'subtitle': f'total data {total_data}',
         'items': all_data,
         'total_data': total_data,
-        'active_tab': 'data'
+        'active_tab': 'data',
+        'keyword': keyword
     }
     return render(request, 'app/data/list.html', context)
 
@@ -181,6 +192,16 @@ def classify_data(request, id):
     return render(request, 'app/data/classification-result.html', context)
 
 @login_required
+def update_status(request, id):
+    item = DataUjiKendaraan.objects.get(id=id)
+    if not request.POST:
+        return redirect('edit_data', args=(id,))
+    data = request.POST
+    item.status = StatusPengujian(data['status'])
+    item.save()
+    return redirect('edit_data', args=(id,))
+
+@login_required
 def statistik(request):
     aggregate = [
         { 'value': 'DR', 'label': 'draft', 'color': '#f59f00' },
@@ -207,18 +228,18 @@ def method_testing(request):
         'active_tab': 'method_testing',
         'title': 'Pengujian Metode'
     }
-    random_state = int(request.GET.get('random_state', '8'))
     test_size = int(request.GET.get('test_size', 30))
+    n_iteration = int(request.GET.get('n_iteration', 10))
     test_result = compute.test_method(
-        random_state=random_state, 
-        test_size=test_size / 100.0
+        test_size=test_size / 100.0,
+        n_iteration=n_iteration
     )
 
     context.update(test_result)
+    context['n_iteration'] = n_iteration
     context['test_size'] = test_size
-    context['random_state'] = random_state
-    context['acc'] = context['acc'] * 100
-    context['err_rate'] = context['err_rate'] * 100
+    context['mean_acc'] = context['mean_acc'] * 100
+    context['mean_err_rate'] = context['mean_err_rate'] * 100
 
     return render(request, 'app/method-testing.html', context)
 
@@ -249,3 +270,13 @@ def method_testing_rev_1(request):
         'n_train': 100 - test_ratio
     }
     return render(request, 'app/method-testing-rev-1.html', context)
+
+def test_report(request):
+    url = "https://script.google.com/macros/s/1yAoLTR-MdSa-JqcUZr0h2NOHQXGkDIYk3y3sj_p_7mBvAF_20-X97soU/exec?name={}"
+    name = request.GET['name']
+    response = requests.get(url.format(name))
+    response = requests.get(response.content)
+    invoice_ids = ["", "456", "789"]
+    with open("name_{name}.pdf", "wb") as f:
+        f.write(response.content)
+    return 'OK'

@@ -48,43 +48,47 @@ def build_classifier():
     clf.fit(X, y)
     return clf
 
-def test_method(random_state=8, test_size=0.3):
+def test_method(test_size=0.3, n_iteration=10):
     data = load_data()
 
     X = data[:, :-1]
     y = data[:, -1]
+    results = []
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, 
-        y, 
-        test_size=test_size,
-        random_state=random_state
-    )
+    for i in range(n_iteration):
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, 
+            y, 
+            test_size=test_size)
+        clf = MultinomialNB()
 
-    clf = MultinomialNB()
+        test_ids = list(X_test[:, 0])
+        print('id data uji')
+        print(test_ids)
+        # print(i)
 
-    # Skip id
-    clf.fit(X_train[:, 1:], y_train)
+        # Skip id
+        clf.fit(X_train[:, 1:], y_train)
 
-    # Collect test data's ids
-    test_ids = list(X_test[:, 0])
-    print(test_ids)
+        y_pred = clf.predict(X_test[:, 1:])
+        tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+        acc = (tp + tn) / (tn + fp + fn + tp)
+        err_rate = (fn + fp) / (tn + fp + fn + tp)
 
-    y_pred = clf.predict(X_test[:, 1:])
-    tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
-    acc = (tp + tn) / (tn + fp + fn + tp)
-    print(f'{acc}')
-    err_rate = (fn + fp) / (tn + fp + fn + tp)
-    print(f'{err_rate}')
+        results.append({
+            'acc': float(acc),
+            'err_rate': float(err_rate)
+        })
+    mean_acc = sum(map(lambda x: x['acc'], results)) / len(results)
+    mean_err_rate = sum(map(lambda x: x['err_rate'], results)) / len(results)
 
-    return {
-        'tp': tp,
-        'tn': tn,
-        'fn': fn,
-        'fp': fp,
-        'acc': acc,
-        'err_rate': err_rate
+    r = {
+        'items': results,
+        'mean_acc': mean_acc,
+        'mean_err_rate': mean_err_rate
     }
+
+    return r
 
 def convert_data_to_numpy(data):
     X = []
@@ -134,8 +138,7 @@ def test_method_rev_1(test_ratio):
             'fn': fn,
             'fp': fp,
             'acc': acc,
-            'err_rate': err_rate,
-            'test_ids': test_ids
+            'err_rate': err_rate
         }
         results.append(part_result)
 

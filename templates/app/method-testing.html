@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="row mb-4">
-  <div class="col-12 col-md-4">
+  <div class="col-12 col-md-3">
     <div class="card">
       <div class="card-header">
         <div class="card-title">Parameter Pengujian</div>
@@ -12,11 +12,11 @@
         <form method="GET">
           {% csrf_token %}
           <div class="mb-3">
-            <label>Sumber Random</label>
+            <label>Jumlah Pengujian</label>
             <input 
-              value="{{ random_state }}"
+              value="{{ n_iteration }}"
               type="number" 
-              name="random_state" 
+              name="n_iteration" 
               class="form-control" required />
           </div>
           <div class="mb-3">
@@ -39,42 +39,104 @@
       </div>
     </div>
   </div>
-  <div class="col-12 col-md-8">
-    <div class="card">
+  <div class="col-12 col-md-9">
+    <div class="card mb-4">
       <div class="card-header">
         <div class="card-title">Hasil Pengujian</div>
       </div>
       <div>
         <table class="table table-v-center card-table">
           <tbody>
-            <tr>
-              <td>True Positif</td>
-              <td>{{ tp }}</td>
-            </tr>
-            <tr>
-              <td>False Positif</td>
-              <td>{{ fp }}</td>
-            </tr>
-            <tr>
-              <td>True Negative</td>
-              <td>{{ tn }}</td>
-            </tr>
-            <tr>
-              <td>False Negative</td>
-              <td>{{ fn }}</td>
-            </tr>
-            <tr>
+            <tr class="fw-bold">
               <td>Akurasi</td>
-              <td>{{ acc|floatformat:2 }} %</td>
+              <td>{{ mean_acc|floatformat:2 }} %</td>
             </tr>
-            <tr>
+            <tr class="fw-bold">
               <td>Error Rate</td>
-              <td>{{ err_rate|floatformat:2 }} %</td>
+              <td>{{ mean_err_rate|floatformat:2 }} %</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+    <div class="card mb-4">
+      <div class="card-header">
+        <div class="card-title">Grafik Perubahan Akurasi dan Error Rate</div>
+      </div>
+      <div class="card-body">
+        <div id="chart-pengujian"></div>
+      </div>
+    </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Libs JS -->
+<script src="{% static 'dist/libs/apexcharts/dist/apexcharts.min.js' %}">
+</script>
+
+{# Aggregate data #}
+{{ items|json_script:"items" }}
+
+<script>
+  const items = JSON.parse(document.getElementById('items').textContent);
+
+  const accSeries = items.map(it => it.acc * 100);
+  const errRateSeries = items.map(it => it.err_rate * 100);
+
+  const series = [
+    {
+      name: 'akurasi',
+      data: accSeries
+    },
+    {
+      name: 'error rate',
+      data: errRateSeries
+    }
+  ];
+
+  document.addEventListener("DOMContentLoaded", function () {
+    window.ApexCharts && (new ApexCharts(document.getElementById('chart-pengujian'), {
+      chart: {
+        type: "line",
+        fontFamily: 'inherit',
+        height: 500,
+        animations: {
+          enabled: false
+        },
+      },
+      yaxis: {
+        max: 100,
+        labels: {
+          formatter: (v) => v.toFixed(2) + '%'
+        }
+      },
+      xaxis: {
+        tickAmount: 10
+      },
+      fill: {
+        opacity: 1,
+      },
+      series,
+      legend: {
+        show: true,
+        position: 'bottom',
+        offsetY: 12,
+        markers: {
+          width: 10,
+          height: 10,
+          radius: 100,
+        },
+        itemMargin: {
+          horizontal: 8,
+          vertical: 8
+        },
+      },
+      tooltip: {
+        fillSeriesColor: false
+      },
+    })).render();
+  });
+</script>
 {% endblock %}

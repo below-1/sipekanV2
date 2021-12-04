@@ -50,7 +50,7 @@
 
 {% block pageActions %}
 <div class="btn-list">
-    <button  class="btn btn-primary d-none d-sm-inline-block">
+    <button type="submit" class="btn btn-primary d-none d-sm-inline-block" form="main_form">
       <!-- Download SVG icon from http://tabler-icons.io/i/cloud-upload -->
       <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" /><polyline points="9 15 12 12 15 15" /><line x1="12" y1="12" x2="12" y2="21" /></svg>
       Simpan Data
@@ -63,7 +63,7 @@
 {% endblock %}
 
 {% block content %}
-  <form method="POST" enctype="multipart/form-data">
+  <form id="main_form" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="row mb-4">
       <div class="col-12 col-md-6">

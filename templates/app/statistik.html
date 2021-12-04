@@ -15,7 +15,8 @@
 
 {% block scripts %}
 <!-- Libs JS -->
-<script src="{% static 'dist/libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+<script src="{% static 'dist/libs/apexcharts/dist/apexcharts.min.js' %}">
+</script>
 
 {# Aggregate data #}
 {{ aggregate|json_script:"aggregate-data" }}

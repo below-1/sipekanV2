@@ -155,10 +155,19 @@
         </div>
       </div>
     </div>
-    <div class="d-grip col-12 col-md-3 my-3">
-      <button type="submit" class="btn btn-primary w-100">
-        update hasil pemeriksaan
-      </button>
-    </div>
+    <form 
+      method="POST"
+      action="/app/update-status/{{item.id}}"
+    >
+      <div class="col-12 col-md-3 my-3">
+        <input hidden 
+          name="status"
+          value="{% if class_result == 1 %}LU{% elif class_result == 0 %}TL{% endif %}"
+        />
+        <button type="submit" class="btn btn-primary w-100">
+          update hasil pemeriksaan
+        </button>
+      </div>
+    </form>
   </form>
 {% endblock %}
