@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
+from django.core import serializers
 from django.shortcuts import render, redirect
-# import requests
+import requests
 from .models import (
     DataUjiKendaraan, 
     StatusPengujian
@@ -280,3 +281,25 @@ def test_report(request):
     with open("name_{name}.pdf", "wb") as f:
         f.write(response.content)
     return 'OK'
+
+def report(request, id):
+    GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyaazKrGTYsT9cq9K_mIb_dU7GqiUGpSiGKuwHGrqE3P2JR9oZBo33HnL4Sj2sN8hl/exec"
+
+    item = DataUjiKendaraan.objects.get(id=id)
+    # print(type(item))
+    # print(item)
+    data_raw = serializers.serialize('json', [item])
+    single_data = data_raw[1:-1]
+    # return HttpResponse(single_data)
+
+    r = requests.post(GOOGLE_APP_SCRIPT_URL, data=single_data)
+    result = r.text
+    # print(result)
+
+    return redirect(result)
+    # return HttpResponse(result)
+
+    # user_token = item['user_token']
+    # with open("{user_token}.pdf", "wb") as f:
+    #     f.write(response.content)
+    # return 'OK'

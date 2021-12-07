@@ -10,6 +10,7 @@ urlpatterns = [
     path('data/<int:id>/edit', views.edit_data, name='edit_data'),
     path('data/<int:id>/update-status', views.update_status, name='update_status'),
     path('data/<int:id>/classify', views.classify_data, name='classify_data'),
+    path('data/<int:id>/report', views.report, name='report'),
     path('statistik', views.statistik, name='statistik'),
     path('method-testing', views.method_testing, name='method_testing'),
     path('method-testing-rev-1', views.method_testing_rev_1, name='method_testing_rev_1'),

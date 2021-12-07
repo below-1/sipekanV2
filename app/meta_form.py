@@ -21,7 +21,7 @@ meta_form__data_uji_kendaraan = [
         FormField('klakson', 'klakson'),
 
         FormField('kaca_spion_l', 'kaca spion L'),
-        FormField('kaca_spion_l', 'kaca spion R'),
+        FormField('kaca_spion_r', 'kaca spion R'),
 
         FormField('pandangan_kedepan', 'pandangan kedepan'),
         FormField('kaca_penahan_sinar', 'kaca penahan sinar'),
@@ -193,6 +193,7 @@ for group in meta_form__data_uji_kendaraan:
         if field.separator:
             continue
         meta_form__component_keys.append(field.name)
+# print(meta_form__component_keys)
 
 status_form_options = [
     { 'value': 'DR', 'label': 'draft' },
