@@ -71,7 +71,10 @@ def test_method(test_size=0.3, n_iteration=10):
         clf.fit(X_train[:, 1:], y_train)
 
         y_pred = clf.predict(X_test[:, 1:])
-        tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+        # print('error')
+        # print(y_pred)
+        # print(confusion_matrix(y_test, y_pred))
+        tn, fp, fn, tp = confusion_matrix(y_test, y_pred, labels=[1, 0]).ravel()
         acc = (tp + tn) / (tn + fp + fn + tp)
         err_rate = (fn + fp) / (tn + fp + fn + tp)
 
