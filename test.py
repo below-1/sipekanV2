@@ -4,6 +4,8 @@ from sklearn.naive_bayes import MultinomialNB
 import csv
 import numpy as np
 
+FILENAME = 'app/data.csv'
+
 data = []
 with open(FILENAME) as csvfile:
     reader = csv.reader(csvfile)
